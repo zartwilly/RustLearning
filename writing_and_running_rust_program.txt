@@ -1,0 +1,88 @@
+https://doc.rust-lang.org/book/ch01-02-hello-world.html#writing-and-running-a-rust-program
+
+* make a new source file and call it main.rs
+ Rust files always end with the .rs extension
+ If you’re using more than one word in your filename, the convention is to use an underscore to separate them. 
+    For example, use hello_world.rs rather than helloworld.rs.
+    
+ filename: main.rs 
+ 
+ fn main() {
+    println!("Hello, world!");
+}
+
+* compiling and running main.rs code
+$ rustc main.rs
+$ ./main
+Hello, world!
+
+* debugging a rust code
+
+$ cargo build
+
+* fix your code with rustfix
+https://doc.rust-lang.org/book/appendix-04-useful-development-tools.html#fix-your-code-with-rustfix
+
+$ cargo build
+$ cargo fix 
+
+To sum up:
+
+Let’s recap what we’ve learned so far about Cargo:
+
+    * We can create a project using cargo new.
+    
+        $ cargo new hello_cargo
+        $ cd hello_cargo
+            
+            for reading more, go to this link 
+            https://doc.rust-lang.org/book/ch01-03-hello-cargo.html#creating-a-project-with-cargo
+    
+    * We can build a project using cargo build.
+        
+        $ cargo build
+            Compiling hello_cargo v0.1.0 (file:///projects/hello_cargo)
+            Finished dev [unoptimized + debuginfo] target(s) in 2.85 secs
+        
+        This command creates an executable file in target/debug/hello_cargo (or target\debug\hello_cargo.exe on Windows) rather than in your current directory. 
+
+        
+    * We can build and run a project in one step using cargo run.
+        $ cargo run
+            Finished dev [unoptimized + debuginfo] target(s) in 0.0 secs
+            Running `target/debug/hello_cargo`
+        Hello, world!
+
+        we can also use cargo run to compile the code and then run the resultant executable all in one command
+    
+            for reading more, go to this link
+            https://doc.rust-lang.org/book/ch01-03-hello-cargo.html#building-and-running-a-cargo-project
+            
+    * We can build a project without producing a binary to check for errors using cargo check.
+        This command quickly checks your code to make sure it compiles but doesn’t produce an executable:
+        $ cargo check
+            Checking hello_cargo v0.1.0 (file:///projects/hello_cargo)
+            Finished dev [unoptimized + debuginfo] target(s) in 0.32 secs
+            
+        Often, cargo check is much faster than cargo build because it skips the step of producing an executable. If you’re continually checking your work while writing the code, using cargo check will speed up the process of letting you know if your project is still compiling! 
+
+    Instead of saving the result of the build in the same directory as our code, Cargo stores it in the target/debug directory.
+    
+    * Building for release
+        When your project is finally ready for release, you can use 
+        $ cargo build --release 
+        
+        to compile it with optimizations. This command will create an executable in target/release instead of target/debug. The optimizations make your Rust code run faster, but turning them on lengthens the time it takes for your program to compile. 
+        
+        https://doc.rust-lang.org/book/ch01-03-hello-cargo.html#building-for-release
+        
+     * Cargo as convention
+     
+        $ git clone example.org/someproject
+        $ cd someproject
+        $ cargo build
+
+        https://doc.rust-lang.org/book/ch01-03-hello-cargo.html#cargo-as-convention
+
+
+
