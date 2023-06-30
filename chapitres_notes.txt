@@ -1,0 +1,146 @@
+chapitre 3 :
+
+variables and mutability
+
+When a variable is immutable, once a value is bound to a name, you can’t change 
+that value.
+
+example:
+    Filename: src/main.rs
+    fn main() {
+        let x = 5;
+        println!("The value of x is: {x}");
+        x = 6;
+        println!("The value of x is: {x}");
+    }
+    Save and run the program using cargo run. 
+    You should receive an error message regarding an immutability error, 
+    as shown in this output:
+    $ cargo run
+       Compiling variables v0.1.0 (file:///projects/variables)
+    error[E0384]: cannot assign twice to immutable variable `x`
+     --> src/main.rs:4:5
+      |
+    2 |     let x = 5;
+      |         -
+      |         |
+      |         first assignment to `x`
+      |         help: consider making this binding mutable: `mut x`
+    3 |     println!("The value of x is: {x}");
+    4 |     x = 6;
+      |     ^^^^^ cannot assign twice to immutable variable
+
+    For more information about this error, try `rustc --explain E0384`.
+    error: could not compile `variables` due to previous error
+
+But mutability can be very useful, and can make code more convenient to write. 
+Although variables are immutable by default, you can make them mutable by 
+adding $mut$ in front of the variable name.
+Adding $mut$ also conveys intent to future readers of the code by indicating 
+that other parts of the code will be changing this variable’s value.
+
+example:
+    Filename: src/main.rs
+        fn main() {
+            let mut x = 5;
+            println!("The value of x is: {x}");
+            x = 6;
+            println!("The value of x is: {x}");
+        }
+    When we run the program now, we get this:
+        $ cargo run
+           Compiling variables v0.1.0 (file:///projects/variables)
+            Finished dev [unoptimized + debuginfo] target(s) in 0.30s
+             Running `target/debug/variables`
+        The value of x is: 5
+        The value of x is: 6
+
+Constants
+
+link: https://doc.rust-lang.org/book/ch03-01-variables-and-mutability.html#constants
+
+Like immutable variables, constants are values that are bound to a name and are 
+not allowed to change, but there are a few differences between constants 
+and variables.
+* You declare constants using the const keyword instead of the let keyword, and 
+the type of the value must be annotated.
+* Constants can be declared in any scope, including the global scope, which 
+makes them useful for values that many parts of code need to know about.
+* The last difference is that constants may be set only to a constant expression, 
+not the result of a value that could only be computed at runtime.
+
+example of a constant declaration:
+    const THREE_HOURS_IN_SECONDS: u32 = 60 * 60 * 3;
+
+- constants' convention name
+     use all uppercase with underscores between words
+     
+Shadowing
+
+link : https://doc.rust-lang.org/book/ch03-01-variables-and-mutability.html#shadowing
+
+Shadowing it is the declaration of a new variable with the same name as a 
+previous variable. 
+Rustaceans say that the first variable is shadowed by the second, which means 
+that the second variable is what the compiler will see when you use the name of 
+the variable. 
+We can shadow a variable by using the same variable’s name and repeating the use
+ of the let keyword as follows:
+ 
+example:
+    Filename: src/main.rs
+       fn main() {
+            let x = 5;
+
+            let x = x + 1;
+
+            {
+                let x = x * 2;
+                println!("The value of x in the inner scope is: {x}");
+            }
+
+            println!("The value of x is: {x}");
+        }
+        
+        $ cargo run
+            Compiling variables v0.1.0 (file:///projects/variables)
+            Finished dev [unoptimized + debuginfo] target(s) in 0.31s
+             Running `target/debug/variables`
+        The value of x in the inner scope is: 12
+        The value of x is: 6
+        
+The other difference between mut and shadowing is that because we’re effectively
+ creating a new variable when we use the let keyword again, we can change the 
+ type of the value but reuse the same name.
+ 
+example : 
+        let spaces = "   ";
+        let spaces = spaces.len();
+        
+        The first spaces variable is a string type and the second spaces 
+        variable is a number type. 
+NB: 
+Shadowing thus spares us from having to come up with different names, such as 
+spaces_str and spaces_num; instead, we can reuse the simpler spaces name.
+
+However, if we try to use mut for this, as shown here, we’ll get a compile-time 
+error:
+
+example:
+        let mut spaces = "   ";
+        spaces = spaces.len();
+        
+        $ cargo run
+           Compiling variables v0.1.0 (file:///projects/variables)
+        error[E0308]: mismatched types
+         --> src/main.rs:3:14
+          |
+        2 |     let mut spaces = "   ";
+          |                      ----- expected due to this value
+        3 |     spaces = spaces.len();
+          |              ^^^^^^^^^^^^ expected `&str`, found `usize`
+
+        For more information about this error, try `rustc --explain E0308`.
+        error: could not compile `variables` due to previous error
+
+
