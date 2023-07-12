@@ -1,6 +1,6 @@
 chapitre 3 :
 
-variables and mutability
+I- variables and mutability
 
 When a variable is immutable, once a value is bound to a name, you can’t change 
 that value.
@@ -142,5 +142,361 @@ example:
 
         For more information about this error, try `rustc --explain E0308`.
         error: could not compile `variables` due to previous error
+
+II- Datatypes
+
+Rust is a statically typed language, which means that it must know the types of all variables at compile time.
+Every value in Rust is of a certain data type, which tells Rust what kind of data 
+is being specified so it knows how to work with that data. 
+We’ll look at two data type subsets: scalar and compound.
+
+# Scalar types
+
+A scalar type represents a single value.
+Rust has four primary scalar types: integers, floating-point numbers, Booleans, 
+and characters.
+
+## interger types 
+https://doc.rust-lang.org/book/ch03-02-data-types.html#integer-types
+
+An integer is a number without a fractional component.
+We can use any of these variants to declare the type of an integer value.
+
+Table 3-1: Integer Types in Rust
+Length	Signed	Unsigned
+8-bit   i8	u8
+16-bit  i16 u16
+32-bit	i32	u32
+64-bit	i64	u64
+128-bit	i128	u128
+arch	isize	usize
+
+example: an i8 can store numbers from $-(2^7)$ to $2^7 - 1$, which equals $-128$ 
+to $127$.
+while an $u8$  can store numbers from 0 to 2^7 - 1, which equals 0 to 255.
+the isize and usize types depend on the architecture of the computer your 
+program is running on, which is denoted in the table as “arch”: 64 bits if 
+you’re on a 64-bit architecture and 32 bits if you’re on a 32-bit architecture.
+You can write integer literals in any of the forms shown in Table 3-2
+
+Table 3-2: Integer Literals in Rust
+Number literals	Example
+Decimal	98_222
+Hex 0xff
+Octal   0o77
+Binary  0b1111_0000
+Byte (u8 only)	b'A'
+
+example : Number literals can also use _ as a visual separator to make the 
+number easier to read, such as 1_000, which will have the same value as if 
+you had specified 1000.
+
+## floatting-point types
+https://doc.rust-lang.org/book/ch03-02-data-types.html#floating-point-types
+
+Rust also has two primitive types for floating-point numbers, which are numbers 
+with decimal points. Rust’s floating-point types are $f32$ and $f64$, which are 
+$32$ bits and $64$ bits in size, respectively. 
+The default type is $f64$ because on modern CPUs, it’s roughly the same speed as
+ $f32$ but is capable of more precision. All floating-point types are signed.
+
+Filename: src/main.rs
+
+fn main() {
+    let x = 2.0; // f64
+
+    let y: f32 = 3.0; // f32
+}
+
+### Numeric Operations
+Rust supports the basic mathematical operations you’d expect for all the number 
+types: addition, subtraction, multiplication, division, and remainder. 
+Integer division truncates toward zero to the nearest integer
+
+Filename: src/main.rs
+fn main() {
+    // addition
+    let sum = 5 + 10;
+
+    // subtraction
+    let difference = 95.5 - 4.3;
+
+    // multiplication
+    let product = 4 * 30;
+
+    // division
+    let quotient = 56.7 / 32.2;
+    let truncated = -5 / 3; // Results in -1
+
+    // remainder
+    let remainder = 43 % 5;
+}
+
+
+## The boolean type
+https://doc.rust-lang.org/book/ch03-02-data-types.html#the-boolean-type
+
+a Boolean type in Rust has two possible values: $true$ and $false$. 
+Booleans are one byte in size. 
+The Boolean type in Rust is specified using bool.
+
+Filename: src/main.rs
+fn main() {
+    let t = true;
+
+    let f: bool = false; // with explicit type annotation
+}
+
+## The character type
+https://doc.rust-lang.org/book/ch03-02-data-types.html#the-character-type
+
+Rust’s char type is the language’s most primitive alphabetic type. 
+Here are some examples of declaring char values:
+
+Filename: src/main.rs
+fn main() {
+    let c = 'z';
+    let z: char = 'ℤ'; // with explicit type annotation
+    let heart_eyed_cat = '😻';
+}
+
+we specify {\em char} literals with {\em single quotes}, as opposed to 
+{\em string literals}, which use {\em double quotes}.
+NB: Rust’s char type is {\em four bytes in size} and represents a {\em Unicode 
+Scalar Value}, which means it can represent a lot more than just ASCII. 
+Accented letters; Chinese, Japanese, and Korean characters; emoji; and zero-width
+ spaces are all valid char values in Rust.
+ 
+ 
+# Compound types 
+https://doc.rust-lang.org/book/ch03-02-data-types.html#compound-types
+
+Compound types can group multiple values into one type. 
+Rust has two primitive compound types: {\em tuples} and {\em arrays}.
+
+## The Tuple Type
+https://doc.rust-lang.org/book/ch03-02-data-types.html#the-tuple-type
+
+A tuple is a general way of grouping together a number of values with a variety 
+of types into one compound type. 
+Tuples have {\em a fixed length}: once declared, they cannot grow or shrink in size.
+
+We create a tuple by writing a comma-separated list of values inside parentheses.
+Each position in the tuple has a type, and the types of the different values in the tuple don’t have to be the same. We’ve added optional type annotations in this example:
+
+fn main() {
+    let tup: (i32, f64, u8) = (500, 6.4, 1);
+}
+
+fn main() {
+    let tup = (500, 6.4, 1);
+
+    let (x, y, z) = tup;
+
+    println!("The value of y is: {y}");
+}
+
+We can also access a tuple element directly by using a {\em period (.)} followed 
+by the {\em index of the value} we want to access.
+
+Filename: src/main.rs
+
+fn main() {
+    let x: (i32, f64, u8) = (500, 6.4, 1);
+
+    let five_hundred = x.0;
+
+    let six_point_four = x.1;
+
+    let one = x.2;
+}
+
+
+
+## The Array Type
+https://doc.rust-lang.org/book/ch03-02-data-types.html#the-array-type
+
+Another way to have a collection of multiple values is with an array. 
+Unlike a tuple, {\em every element} of an array must have {\em the same type}. 
+Unlike arrays in some other languages, {\em arrays} in Rust have {\em a fixed 
+length}. {\em A vector} is a similar collection type provided by the standard 
+library that is allowed to {\em grow or shrink in size}.
+
+We write {\em the values} in an array as {\em a comma-separated list inside 
+square brackets}:
+
+fn main() {
+    let a = [1, 2, 3, 4, 5];
+}
+
+You write an array’s type using square brackets with the type of each element, 
+a semicolon, and then the number of elements in the array, like so:
+
+let a: [i32; 5] = [1, 2, 3, 4, 5];
+
+Here, $i32$ is {\em the type of each element}. After the semicolon, the number 
+$5$ indicates the {\em array contains five elements}.
+
+You can also {\em initialize an array} to contain the {\em same value]} for 
+{\em each element} by specifying the {\em initial value}, followed by 
+{\em a semicolon}, and then {\em the length of the array in square brackets}, 
+as shown here:
+
+let a = [3; 5]; ==> let a = [3, 3, 3, 3, 3]
+
+
+### Accessing array elements
+An array is a single chunk of memory of a known, fixed size that can be 
+allocated on the stack. You can access elements of an array using indexing, 
+like this
+
+fn main() {
+    let a = [1, 2, 3, 4, 5];
+
+    let first = a[0];
+    let second = a[1];
+}
+
+
+example for accessing of arrays'element :
+
+use std::io;
+
+fn main() {
+    let a = [1, 2, 3, 4, 5];
+
+    println!("Please enter an array index.");
+
+    let mut index = String::new();
+
+    io::stdin()
+        .read_line(&mut index)
+        .expect("Failed to read line");
+
+    let index: usize = index
+        .trim()
+        .parse()
+        .expect("Index entered was not a number");
+
+    let element = a[index];
+
+    println!("The value of the element at index {index} is: {element}");
+}
+
+## Functions
+https://doc.rust-lang.org/book/ch03-03-how-functions-work.html#functions
+
+Rust code uses {\em snacke case} as the conventional style for function and 
+variable names in which all {\em letters} are {\em lowercase} and {\em underscore}
+separate words. \newline
+We define a function in Rust by entering {\em fn} followed by a {\em function name}
+and a {set of parentheses}.
+
+example:
+    filename src/main.rs
+    fn main() {
+        println!("Hello, world!");
+
+        another_function();
+    }
+
+    fn another_function() {
+        println!("Another function.");
+    }
+    
+### Parameters
+https://doc.rust-lang.org/book/ch03-03-how-functions-work.html#parameters
+
+When a function has {\em parameters}, you can provide it with {\em concrete values} 
+for those parameters. Technically, the {\em concrete values} are called {\em arguments}.
+In function signatures, you must declare the type of each parameter. 
+When defining multiple parameters, separate the parameter declarations with 
+commas, like this:
+
+example:
+    Filename: src/main.rs
+    fn main() {
+        another_function(5);
+        print_labeled_measurement(5, 'h');
+    }
+
+    fn another_function(x: i32) {
+        println!("The value of x is: {x}");
+    }
+    
+    fn print_labeled_measurement(value: i32, unit_label: char) {
+        println!("The measurement is: {value}{unit_label}");
+    }
+    
+### Statements and Expressions
+https://doc.rust-lang.org/book/ch03-03-how-functions-work.html#statements-and-expressions
+
+Rust is an expression-based language and it makes up a distintion between 
+{\em statements} and {\em expressions}.
+\begin{itemize}
+    \item {\bf Statements} are instructions that perform some action and do not return a value. 
+        \newline
+        Creating a variable and assigning a value to it with the let keyword is a statement.
+        \newline
+        For example, {\em let y = 6;} is a statement.
+        \newline
+        Therefore, you can’t assign a let statement to another variable, 
+        as the following code tries to do; you’ll get an error: 
+        \newline
+        example: \newline
+            Filename: src/main.rs \newline
+            fn main() {
+                let x = (let y = 6);
+            }
+            \newline
+            When you run this program, you’ll get a error.
+            \newline
+            Explication of the error: \newline
+                The {\em let y = 6} statement does not return a value, 
+                so there isn’t anything for x to bind to
+                    
+    \item {\bf Expressions} evaluate to a resultant value. \newline
+        Consider a math operation, such as $5 + 6$, which is an expression that evaluates to the value $11$. Expressions can be part of statements:
+        \begin{itemize}
+            \item the statement {\em let y = 6;} is an expression that evaluates 
+                    to the value $6$
+            \item Calling a function is an expression. 
+            \item Calling a macro is an expression. 
+            \item A new scope block created with curly brackets is an expression
+        \end{itemize}
+        
+        Example: \newline
+            Filename: src/main.rs \newline
+            fn main() {
+                let y = {
+                    let x = 3;
+                    x + 1
+                };
+
+                println!("The value of y is: {y}");
+            }
+\end{itemize}
+
+
+### Functions with return values
+https://doc.rust-lang.org/book/ch03-03-how-functions-work.html#functions-with-return-values
+    
+We don’t name return values, but we must declare their type after an arrow $(->)$.
+In Rust, the return value of the function is synonymous with the value of the 
+final expression in the block of the body of a function.
+
+example: \newline
+    Filename: src/main.rs \newline
+    fn main() {
+        let x = plus_one(5);
+
+        println!("The value of x is: {x}");
+    }
+
+    fn plus_one(x: i32) -> i32 {
+        x + 1
+    }
+
+## Comments
 
 
